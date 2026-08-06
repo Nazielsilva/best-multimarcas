@@ -1,0 +1,56 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-zinc-950 text-white font-sans antialiased;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-zinc-950;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-zinc-800 rounded-full hover:bg-zinc-700 transition-colors;
+  }
+}
+
+@layer utilities {
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  .glass {
+    @apply bg-zinc-900/80 backdrop-blur-md border border-zinc-800/50;
+  }
+  
+  .glass-panel {
+    @apply bg-zinc-900/80 backdrop-blur-md border border-zinc-800/50;
+  }
+
+  .text-glow {
+    text-shadow: 0 0 20px rgba(220, 38, 38, 0.5); /* red glow */
+  }
+
+  .text-gradient {
+    @apply text-red-600;
+    text-shadow: 0 0 20px rgba(220, 38, 38, 0.5);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
