@@ -56,21 +56,21 @@ export default function Mascots({ isPasswordFocused }) {
 
   return (
     <div className="w-full flex justify-center items-end mb-6" style={{ height: '140px' }}>
-      <svg width="240" height="140" viewBox="0 0 240 140" className="overflow-visible">
+      <svg width="240" height="140" viewBox="0 0 240 140" className="overflow-hidden" style={{ borderRadius: '0 0 8px 8px' }}>
         
         {/* 1. Laranja Semicírculo (Atrás, Esquerda) */}
-        {/* Quando clica na senha, ele desliza para a direita, se escondendo atrás do roxo */}
+        {/* Quando clica na senha, ele desliza para a direita, escondendo os olhos atrás do roxo */}
         <g 
           className="transition-transform duration-500 ease-in-out"
-          style={{ transform: isPasswordFocused ? 'translateX(35px)' : 'translateX(0)' }}
+          style={{ transform: isPasswordFocused ? 'translateX(32px)' : 'translateX(0)' }}
         >
           <path d="M 10 140 A 45 45 0 0 1 100 140 Z" fill="#f97316" />
-          <Eye cx={45} cy={110} isHidden={isPasswordFocused} />
-          <Eye cx={65} cy={110} isHidden={isPasswordFocused} />
+          <Eye cx={45} cy={110} isHidden={false} />
+          <Eye cx={65} cy={110} isHidden={false} />
         </g>
 
         {/* 2. Preto Retângulo (Atrás, Direita) */}
-        {/* Inclinado por padrão. Quando clica na senha, afunda para baixo */}
+        {/* Inclinado por padrão. Quando clica na senha, afunda para baixo (escondido pelo overflow-hidden) */}
         <g 
           className="transition-transform duration-500 ease-in-out"
           style={{
@@ -81,8 +81,8 @@ export default function Mascots({ isPasswordFocused }) {
           }}
         >
           <rect x="120" y="30" width="38" height="110" rx="4" fill="#27272a" />
-          <Eye cx={131} cy={50} isHidden={isPasswordFocused} />
-          <Eye cx={147} cy={50} isHidden={isPasswordFocused} />
+          <Eye cx={131} cy={50} isHidden={false} />
+          <Eye cx={147} cy={50} isHidden={false} />
         </g>
 
         {/* 3. Amarelo Blob/Feijão (Direita) */}
@@ -94,38 +94,38 @@ export default function Mascots({ isPasswordFocused }) {
           
           {/* Braço preto cobrindo os olhos */}
           <path 
-            d="M 205 75 Q 170 90 150 55" 
+            d="M 210 52 Q 170 48 145 65" 
             stroke="#27272a" 
-            strokeWidth="12" 
+            strokeWidth="11" 
             strokeLinecap="round" 
             fill="none"
             className="transition-all duration-500 ease-in-out"
             style={{
               opacity: isPasswordFocused ? 1 : 0,
-              transformOrigin: '200px 75px',
-              transform: isPasswordFocused ? 'rotate(0deg)' : 'rotate(40deg) translateY(30px)'
+              transformOrigin: '210px 52px',
+              transform: isPasswordFocused ? 'rotate(0deg)' : 'rotate(30deg) translateY(20px)'
             }}
           />
         </g>
 
         {/* 4. Roxo Retângulo Alto (Frente, Esquerda) */}
-        {/* Quando clica na senha, a parte de cima dobra/dobra pra baixo cobrindo os próprios olhos */}
+        {/* Quando clica na senha, a parte de cima dobra perfeitamente pra baixo cobrindo os próprios olhos */}
         <g transform="translate(60, 5)">
           {/* Corpo (parte de baixo, estática) */}
           <path d="M 0 55 L 45 55 L 45 135 L 0 135 Z" fill="#7c3aed" />
           
-          {/* Os olhos ficam exatamente na emenda */}
-          <Eye cx={13} cy={70} isHidden={isPasswordFocused} />
-          <Eye cx={32} cy={70} isHidden={isPasswordFocused} />
+          {/* Os olhos ficam exatamente na emenda e serão cobertos pela aba */}
+          <Eye cx={13} cy={70} isHidden={false} />
+          <Eye cx={32} cy={70} isHidden={false} />
           
           {/* Aba (parte de cima, que dobra) */}
           <path 
             d="M 0 5 Q 0 0 5 0 L 40 0 Q 45 0 45 5 L 45 55 L 0 55 Z" 
-            fill={isPasswordFocused ? "#6d28d9" : "#7c3aed"} // Fica mais escuro quando dobra pra simular sombra
+            fill={isPasswordFocused ? "#6d28d9" : "#7c3aed"} // Fica mais escuro quando dobra
             className="transition-all duration-500 ease-in-out"
             style={{
-              transformOrigin: '22.5px 55px', // Eixo de rotação exatamente na base da aba
-              transform: isPasswordFocused ? 'scaleY(-1) rotate(-8deg) translateY(-2px)' : 'scaleY(1) rotate(0deg) translateY(0px)'
+              transformOrigin: '50% 100%', // Gira exatamente na base (y=55)
+              transform: isPasswordFocused ? 'rotateX(180deg)' : 'rotateX(0deg)'
             }}
           />
         </g>
