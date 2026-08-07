@@ -63,40 +63,40 @@ export default function Admin() {
   if (!user) {
     return (
       <div className="min-h-screen bg-zinc-950 flex items-center justify-center px-4">
-        <div className="max-w-md w-full bg-white p-8 rounded-3xl shadow-2xl relative overflow-hidden">
+        <div className="w-full bg-white p-8 rounded-3xl shadow-2xl relative overflow-hidden" style={{ maxWidth: '420px' }}>
           
           <Mascots isPasswordFocused={isPasswordFocused} />
           
-          <h1 className="text-3xl font-black text-zinc-900 text-center mb-2">Bem-vindo(a)!</h1>
-          <p className="text-zinc-500 text-center mb-8 text-sm">Acesso restrito ao Painel Admin</p>
+          <h1 className="text-3xl font-black text-zinc-900 text-center mb-1">Bem-vindo(a)! 👋</h1>
+          <p className="text-zinc-400 text-center mb-8 text-sm font-medium">Acesso restrito · Best Multimarcas</p>
           
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <input
-                type="email"
-                placeholder="E-mail"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-zinc-100 border-2 border-zinc-200 rounded-xl px-4 py-3 text-zinc-900 font-medium focus:outline-none focus:border-red-500 transition-colors"
-                required
-              />
-            </div>
-            <div>
-              <input
-                type="password"
-                placeholder="Senha"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onFocus={() => setIsPasswordFocused(true)}
-                onBlur={() => setIsPasswordFocused(false)}
-                className="w-full bg-zinc-100 border-2 border-zinc-200 rounded-xl px-4 py-3 text-zinc-900 font-medium focus:outline-none focus:border-red-500 transition-colors"
-                required
-              />
-            </div>
-            {error && <p className="text-red-500 text-sm text-center font-medium">{error}</p>}
+          <form onSubmit={handleLogin} className="space-y-3">
+            <input
+              type="email"
+              placeholder="E-mail do administrador"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full bg-zinc-50 border-2 border-zinc-200 rounded-2xl px-4 py-3.5 text-zinc-900 font-medium placeholder:text-zinc-400 focus:outline-none focus:border-red-500 focus:bg-white transition-all"
+              required
+            />
+            <input
+              type="password"
+              placeholder="Senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onFocus={() => setIsPasswordFocused(true)}
+              onBlur={() => setIsPasswordFocused(false)}
+              className="w-full bg-zinc-50 border-2 border-zinc-200 rounded-2xl px-4 py-3.5 text-zinc-900 font-medium placeholder:text-zinc-400 focus:outline-none focus:border-red-500 focus:bg-white transition-all"
+              required
+            />
+            {error && (
+              <p className="text-red-500 text-sm text-center font-semibold bg-red-50 py-2 rounded-xl">
+                {error}
+              </p>
+            )}
             <button 
               type="submit"
-              className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl transition-colors mt-4"
+              className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-2xl transition-all duration-200 mt-2 hover:shadow-xl hover:shadow-red-500/25 active:scale-[0.98] text-base tracking-wide"
             >
               Entrar no Painel
             </button>
