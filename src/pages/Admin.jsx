@@ -62,43 +62,47 @@ export default function Admin() {
   // --- TELA DE LOGIN ---
   if (!user) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center px-4">
-        <div className="w-full p-8 rounded-3xl relative overflow-hidden" style={{ maxWidth: '420px', background: '#3a3a4a' }}>
-          
+      <div className="min-h-screen bg-zinc-50 flex items-center justify-center px-4">
+        <div className="w-full bg-white p-10 rounded-[2rem] shadow-xl relative overflow-hidden" style={{ maxWidth: '420px', border: '1px solid #f3f4f6' }}>
+
           <Mascots isPasswordFocused={isPasswordFocused} />
-          
-          <h1 className="text-2xl font-black text-white text-center mb-1">Bem-vindo(a)! 👋</h1>
-          <p className="text-zinc-400 text-center mb-6 text-sm font-medium">Acesso restrito · Best Multimarcas</p>
-          
-          <form onSubmit={handleLogin} className="space-y-3">
-            <input
-              type="email"
-              placeholder="E-mail do administrador"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-2xl px-4 py-3.5 text-zinc-900 font-medium placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-red-500 transition-all"
-              style={{ background: '#b0b0c0' }}
-              required
-            />
-            <input
-              type="password"
-              placeholder="Senha"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              onFocus={() => setIsPasswordFocused(true)}
-              onBlur={() => setIsPasswordFocused(false)}
-              className="w-full rounded-2xl px-4 py-3.5 text-zinc-900 font-medium placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-red-500 transition-all"
-              style={{ background: '#b0b0c0' }}
-              required
-            />
+
+          <h1 className="text-2xl font-bold text-zinc-900 text-center mb-2 font-sans tracking-tight">Welcome back!</h1>
+          <p className="text-zinc-400 text-center mb-8 text-xs font-semibold uppercase tracking-wider">Acesso restrito · Best Multimarcas</p>
+
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label className="block text-xs font-semibold text-zinc-500 mb-1 ml-1">E-mail</label>
+              <input
+                type="email"
+                placeholder="E-mail do administrador"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full bg-white border border-zinc-200 rounded-xl px-4 py-3 text-sm text-zinc-900 font-medium placeholder:text-zinc-300 focus:outline-none focus:border-zinc-900 transition-colors"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-zinc-500 mb-1 ml-1">Senha</label>
+              <input
+                type="password"
+                placeholder="Senha"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onFocus={() => setIsPasswordFocused(true)}
+                onBlur={() => setIsPasswordFocused(false)}
+                className="w-full bg-white border border-zinc-200 rounded-xl px-4 py-3 text-sm text-zinc-900 font-medium placeholder:text-zinc-300 focus:outline-none focus:border-zinc-900 transition-colors"
+                required
+              />
+            </div>
             {error && (
-              <p className="text-red-400 text-sm text-center font-semibold bg-red-900/30 py-2 rounded-xl">
+              <p className="text-red-500 text-sm text-center font-semibold bg-red-50 py-2 rounded-xl">
                 {error}
               </p>
             )}
-            <button 
+            <button
               type="submit"
-              className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-2xl transition-all duration-200 mt-2 hover:shadow-xl hover:shadow-red-500/25 active:scale-[0.98] text-base tracking-wide"
+              className="w-full bg-zinc-900 hover:bg-black text-white font-semibold py-3.5 rounded-xl transition-all duration-200 mt-2 text-sm tracking-wide shadow-md"
             >
               Entrar no Painel
             </button>
