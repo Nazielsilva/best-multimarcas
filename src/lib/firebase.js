@@ -4,7 +4,7 @@ import { getStorage } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBmsb336dunZ4okcOqaf1C5mkjD9f2nY2M",
+  apiKey: "AIzaSyBmsb336dunZ4oKcOqaf1C5mkjD9f2nY2M",
   authDomain: "best-multimarcas.firebaseapp.com",
   projectId: "best-multimarcas",
   storageBucket: "best-multimarcas.firebasestorage.app",
