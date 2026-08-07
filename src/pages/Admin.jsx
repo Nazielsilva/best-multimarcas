@@ -63,12 +63,12 @@ export default function Admin() {
   if (!user) {
     return (
       <div className="min-h-screen bg-zinc-950 flex items-center justify-center px-4">
-        <div className="w-full bg-white p-8 rounded-3xl shadow-2xl relative overflow-hidden" style={{ maxWidth: '420px' }}>
+        <div className="w-full p-8 rounded-3xl relative overflow-hidden" style={{ maxWidth: '420px', background: '#3a3a4a' }}>
           
           <Mascots isPasswordFocused={isPasswordFocused} />
           
-          <h1 className="text-3xl font-black text-zinc-900 text-center mb-1">Bem-vindo(a)! 👋</h1>
-          <p className="text-zinc-400 text-center mb-8 text-sm font-medium">Acesso restrito · Best Multimarcas</p>
+          <h1 className="text-2xl font-black text-white text-center mb-1">Bem-vindo(a)! 👋</h1>
+          <p className="text-zinc-400 text-center mb-6 text-sm font-medium">Acesso restrito · Best Multimarcas</p>
           
           <form onSubmit={handleLogin} className="space-y-3">
             <input
@@ -76,7 +76,8 @@ export default function Admin() {
               placeholder="E-mail do administrador"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-zinc-50 border-2 border-zinc-200 rounded-2xl px-4 py-3.5 text-zinc-900 font-medium placeholder:text-zinc-400 focus:outline-none focus:border-red-500 focus:bg-white transition-all"
+              className="w-full rounded-2xl px-4 py-3.5 text-zinc-900 font-medium placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-red-500 transition-all"
+              style={{ background: '#b0b0c0' }}
               required
             />
             <input
@@ -86,11 +87,12 @@ export default function Admin() {
               onChange={(e) => setPassword(e.target.value)}
               onFocus={() => setIsPasswordFocused(true)}
               onBlur={() => setIsPasswordFocused(false)}
-              className="w-full bg-zinc-50 border-2 border-zinc-200 rounded-2xl px-4 py-3.5 text-zinc-900 font-medium placeholder:text-zinc-400 focus:outline-none focus:border-red-500 focus:bg-white transition-all"
+              className="w-full rounded-2xl px-4 py-3.5 text-zinc-900 font-medium placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-red-500 transition-all"
+              style={{ background: '#b0b0c0' }}
               required
             />
             {error && (
-              <p className="text-red-500 text-sm text-center font-semibold bg-red-50 py-2 rounded-xl">
+              <p className="text-red-400 text-sm text-center font-semibold bg-red-900/30 py-2 rounded-xl">
                 {error}
               </p>
             )}
