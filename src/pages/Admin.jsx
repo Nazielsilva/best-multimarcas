@@ -67,8 +67,8 @@ export default function Admin() {
 
           <Mascots isPasswordFocused={isPasswordFocused} />
 
-          <h1 className="text-2xl font-bold text-zinc-900 text-center mb-2 font-sans tracking-tight">Welcome back!</h1>
-          <p className="text-zinc-400 text-center mb-8 text-xs font-semibold uppercase tracking-wider">Acesso restrito · Best Multimarcas</p>
+          <h1 className="text-2xl font-bold text-zinc-900 text-center mb-2 font-sans tracking-tight">Olá, que bom te ver!</h1>
+          <p className="text-zinc-400 text-center mb-8 text-xs font-semibold uppercase tracking-wider">Gestão da Loja · Best Multimarcas</p>
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
