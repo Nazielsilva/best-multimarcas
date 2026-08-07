@@ -3,6 +3,7 @@ import { auth, db } from '../lib/firebase';
 import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 import { Lock, LogOut, Plus, Edit2, Trash2, Image as ImageIcon } from 'lucide-react';
+import Mascots from '../components/Mascots';
 
 export default function Admin() {
   const [user, setUser] = useState(null);
@@ -13,6 +14,7 @@ export default function Admin() {
   
   const [products, setProducts] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -61,23 +63,21 @@ export default function Admin() {
   if (!user) {
     return (
       <div className="min-h-screen bg-zinc-950 flex items-center justify-center px-4">
-        <div className="max-w-md w-full glass p-8 rounded-3xl border border-zinc-800/80">
-          <div className="flex justify-center mb-6">
-            <div className="w-16 h-16 bg-red-600/20 text-red-500 rounded-2xl flex items-center justify-center">
-              <Lock className="w-8 h-8" />
-            </div>
-          </div>
-          <h1 className="text-2xl font-black text-white text-center mb-2">Painel Administrativo</h1>
-          <p className="text-zinc-400 text-center mb-8 text-sm">Acesso restrito à Best Multimarcas</p>
+        <div className="max-w-md w-full bg-white p-8 rounded-3xl shadow-2xl relative overflow-hidden">
+          
+          <Mascots isPasswordFocused={isPasswordFocused} />
+          
+          <h1 className="text-3xl font-black text-zinc-900 text-center mb-2">Bem-vindo(a)!</h1>
+          <p className="text-zinc-500 text-center mb-8 text-sm">Acesso restrito ao Painel Admin</p>
           
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
               <input
                 type="email"
-                placeholder="E-mail do Administrador"
+                placeholder="E-mail"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-600"
+                className="w-full bg-zinc-100 border-2 border-zinc-200 rounded-xl px-4 py-3 text-zinc-900 font-medium focus:outline-none focus:border-red-500 transition-colors"
                 required
               />
             </div>
@@ -87,7 +87,9 @@ export default function Admin() {
                 placeholder="Senha"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-600"
+                onFocus={() => setIsPasswordFocused(true)}
+                onBlur={() => setIsPasswordFocused(false)}
+                className="w-full bg-zinc-100 border-2 border-zinc-200 rounded-xl px-4 py-3 text-zinc-900 font-medium focus:outline-none focus:border-red-500 transition-colors"
                 required
               />
             </div>
