@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { auth, db } from '../lib/firebase';
+import { auth, db, storage } from '../lib/firebase';
 import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
-import { Lock, LogOut, Plus, Edit2, Trash2, Image as ImageIcon, Eye, EyeOff } from 'lucide-react';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { Lock, LogOut, Plus, Edit2, Trash2, Image as ImageIcon, Eye, EyeOff, X, Upload } from 'lucide-react';
 import Mascots from '../components/Mascots';
 
 export default function Admin() {
@@ -16,7 +17,9 @@ export default function Admin() {
   const [isEditing, setIsEditing] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newProduct, setNewProduct] = useState({ name: '', price: '', category: 'Camisetas', image: null });
+  const [isUploading, setIsUploading] = useState(false);
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -39,6 +42,49 @@ export default function Admin() {
       setProducts(items);
     } catch (err) {
       console.error("Erro ao buscar produtos:", err);
+    }
+  };
+
+  const handleAddProduct = async (e) => {
+    e.preventDefault();
+    if (!newProduct.name || !newProduct.price || !newProduct.category) return;
+    
+    setIsUploading(true);
+    let imageUrl = '';
+
+    try {
+      if (newProduct.image) {
+        const imageRef = ref(storage, `products/${Date.now()}_${newProduct.image.name}`);
+        const uploadTask = await uploadBytesResumable(imageRef, newProduct.image);
+        imageUrl = await getDownloadURL(uploadTask.ref);
+      }
+
+      await addDoc(collection(db, "products"), {
+        name: newProduct.name,
+        price: newProduct.price,
+        category: newProduct.category,
+        image: imageUrl,
+        createdAt: new Date()
+      });
+
+      setNewProduct({ name: '', price: '', category: 'Camisetas', image: null });
+      setIsModalOpen(false);
+      fetchProducts();
+    } catch (err) {
+      console.error("Erro ao adicionar produto:", err);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleDeleteProduct = async (id) => {
+    if (window.confirm('Tem certeza que deseja excluir este produto?')) {
+      try {
+        await deleteDoc(doc(db, "products", id));
+        fetchProducts();
+      } catch (err) {
+        console.error("Erro ao excluir produto:", err);
+      }
     }
   };
 
@@ -144,7 +190,7 @@ export default function Admin() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Painel Esquerdo: Menu / Resumo */}
           <div className="md:col-span-1 space-y-4">
-            <button className="w-full flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-400 text-black font-black py-4 rounded-2xl transition-colors shadow-[0_0_20px_rgba(245,158,11,0.2)]">
+            <button onClick={() => setIsModalOpen(true)} className="w-full flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-400 text-black font-black py-4 rounded-2xl transition-colors shadow-[0_0_20px_rgba(245,158,11,0.2)]">
               <Plus className="w-5 h-5" />
               NOVO PRODUTO
             </button>
@@ -188,7 +234,7 @@ export default function Admin() {
                     </div>
                     <div className="flex gap-2">
                       <button className="p-2 text-zinc-400 hover:text-amber-500 bg-zinc-950 rounded-lg transition-colors"><Edit2 className="w-4 h-4" /></button>
-                      <button className="p-2 text-zinc-400 hover:text-red-500 bg-zinc-950 rounded-lg transition-colors"><Trash2 className="w-4 h-4" /></button>
+                      <button onClick={() => handleDeleteProduct(product.id)} className="p-2 text-zinc-400 hover:text-red-500 bg-zinc-950 rounded-lg transition-colors"><Trash2 className="w-4 h-4" /></button>
                     </div>
                   </div>
                 ))}
@@ -196,6 +242,69 @@ export default function Admin() {
             )}
           </div>
         </div>
+
+        {/* Modal de Novo Produto */}
+        {isModalOpen && (
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-zinc-950 border border-zinc-800 rounded-3xl p-6 w-full max-w-md shadow-2xl">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-bold text-white">Novo Produto</h2>
+                <button onClick={() => setIsModalOpen(false)} className="text-zinc-400 hover:text-white">
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+              
+              <form onSubmit={handleAddProduct} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-semibold text-zinc-500 mb-1 ml-1">Nome da Peça</label>
+                  <input type="text" value={newProduct.name} onChange={e => setNewProduct({...newProduct, name: e.target.value})} className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors" required />
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-zinc-500 mb-1 ml-1">Preço (R$)</label>
+                    <input type="number" step="0.01" value={newProduct.price} onChange={e => setNewProduct({...newProduct, price: e.target.value})} className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors" required />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-zinc-500 mb-1 ml-1">Categoria</label>
+                    <select value={newProduct.category} onChange={e => setNewProduct({...newProduct, category: e.target.value})} className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors" required>
+                      <option>Camisetas</option>
+                      <option>Calças</option>
+                      <option>Tênis</option>
+                      <option>Casacos</option>
+                      <option>Acessórios</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-zinc-500 mb-1 ml-1">Foto do Produto</label>
+                  <div className="w-full bg-zinc-900 border-2 border-dashed border-zinc-800 rounded-xl p-4 flex flex-col items-center justify-center text-zinc-500 hover:border-amber-500 transition-colors cursor-pointer relative overflow-hidden">
+                    <input type="file" accept="image/*" onChange={e => setNewProduct({...newProduct, image: e.target.files[0]})} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
+                    {newProduct.image ? (
+                      <div className="text-amber-500 text-sm font-semibold truncate px-2 w-full text-center">
+                        {newProduct.image.name}
+                      </div>
+                    ) : (
+                      <>
+                        <Upload className="w-6 h-6 mb-2" />
+                        <span className="text-xs">Clique ou arraste uma imagem</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                <button type="submit" disabled={isUploading} className="w-full bg-amber-500 hover:bg-amber-400 disabled:opacity-50 text-black font-black py-4 rounded-2xl transition-colors mt-6 flex justify-center items-center gap-2">
+                  {isUploading ? (
+                    <span className="animate-pulse">SALVANDO...</span>
+                  ) : (
+                    <>SALVAR PRODUTO</>
+                  )}
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
