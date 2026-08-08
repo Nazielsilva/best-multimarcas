@@ -3,7 +3,7 @@ import { auth, db, storage } from '../lib/firebase';
 import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import { Lock, LogOut, Plus, Edit2, Trash2, Image as ImageIcon, Eye, EyeOff, X, Upload } from 'lucide-react';
+import { Lock, LogOut, Plus, Edit2, Trash2, Image as ImageIcon, Eye, EyeOff, X, Upload, LayoutDashboard, Package, Settings, Search } from 'lucide-react';
 import Mascots from '../components/Mascots';
 
 export default function Admin() {
@@ -169,77 +169,168 @@ export default function Admin() {
     );
   }
 
-  // --- TELA DO PAINEL (DASHBOARD) ---
+  // --- TELA DO PAINEL (DASHBOARD) COM SIDEBAR ---
   return (
-    <div className="min-h-screen bg-zinc-950 text-white p-4 md:p-8">
-      <div className="max-w-6xl mx-auto">
-        <header className="flex flex-col md:flex-row justify-between items-center mb-12 gap-4 glass p-6 rounded-3xl border border-zinc-800/50">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-black text-white">Gerenciador de Estoque</h1>
-            <p className="text-zinc-400 text-sm">Controle as peças da vitrine e da promoção</p>
+    <div className="flex h-screen bg-zinc-950 text-white overflow-hidden selection:bg-amber-500/30">
+      
+      {/* SIDEBAR */}
+      <aside className="w-64 bg-zinc-950/50 border-r border-zinc-800/50 flex flex-col justify-between hidden md:flex z-10 backdrop-blur-xl relative">
+        {/* Efeito de luz sutil no fundo da sidebar */}
+        <div className="absolute top-0 left-0 w-full h-32 bg-amber-500/5 blur-[80px] -z-10 rounded-full" />
+        
+        <div className="p-6">
+          <div className="mb-10">
+            <h1 className="text-xl font-black text-white tracking-tighter">BEST<span className="text-amber-500">MULTIMARCAS</span></h1>
+            <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mt-1">Admin Pro</p>
+          </div>
+          
+          <nav className="space-y-2">
+            <button className="w-full flex items-center gap-3 px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-amber-500 font-semibold shadow-[0_0_15px_rgba(245,158,11,0.05)] transition-all">
+              <LayoutDashboard className="w-5 h-5" />
+              Visão Geral
+            </button>
+            <button className="w-full flex items-center gap-3 px-4 py-3 text-zinc-400 hover:text-white hover:bg-zinc-900/50 rounded-xl transition-all">
+              <Package className="w-5 h-5" />
+              Meus Produtos
+            </button>
+            <button className="w-full flex items-center gap-3 px-4 py-3 text-zinc-400 hover:text-white hover:bg-zinc-900/50 rounded-xl transition-all">
+              <Settings className="w-5 h-5" />
+              Configurações
+            </button>
+          </nav>
+        </div>
+
+        <div className="p-6 border-t border-zinc-800/50">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-500 to-amber-700 flex items-center justify-center font-bold shadow-[0_0_10px_rgba(245,158,11,0.3)]">
+              AD
+            </div>
+            <div>
+              <p className="text-sm font-bold text-white">Admin</p>
+              <p className="text-xs text-zinc-500 truncate max-w-[120px]">{user.email}</p>
+            </div>
           </div>
           <button 
             onClick={handleLogout}
-            className="flex items-center gap-2 text-zinc-400 hover:text-red-500 transition-colors bg-zinc-900/50 px-4 py-2 rounded-xl"
+            className="w-full flex items-center justify-center gap-2 text-zinc-400 hover:text-red-500 hover:bg-red-500/10 py-3 rounded-xl transition-all text-sm font-semibold border border-transparent hover:border-red-500/20"
           >
             <LogOut className="w-4 h-4" />
-            Sair
+            Encerrar Sessão
           </button>
-        </header>
+        </div>
+      </aside>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Painel Esquerdo: Menu / Resumo */}
-          <div className="md:col-span-1 space-y-4">
-            <button onClick={() => setIsModalOpen(true)} className="w-full flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-400 text-black font-black py-4 rounded-2xl transition-colors shadow-[0_0_20px_rgba(245,158,11,0.2)]">
-              <Plus className="w-5 h-5" />
-              NOVO PRODUTO
-            </button>
+      {/* CONTEÚDO PRINCIPAL */}
+      <main className="flex-1 overflow-y-auto relative">
+        {/* Glow de fundo na área principal */}
+        <div className="absolute top-20 left-1/4 w-96 h-96 bg-amber-500/5 blur-[120px] -z-10 rounded-full" />
+        
+        <div className="p-6 md:p-10 max-w-6xl mx-auto space-y-8">
+          
+          {/* HEADER DO CONTEÚDO */}
+          <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+              <h2 className="text-3xl font-black text-white">Estoque Atual</h2>
+              <p className="text-zinc-400 text-sm mt-1">Gerencie seu catálogo de roupas e acessórios.</p>
+            </div>
             
-            <div className="glass p-6 rounded-3xl border border-zinc-800/50 mt-4">
-              <h3 className="font-bold text-zinc-300 mb-4">Estatísticas</h3>
-              <div className="flex justify-between items-center py-2 border-b border-zinc-800/50">
-                <span className="text-zinc-500 text-sm">Total na Vitrine</span>
-                <span className="font-bold">{products.length} peças</span>
+            <div className="flex gap-4 w-full md:w-auto">
+              <div className="relative flex-1 md:w-64">
+                <Search className="w-4 h-4 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input 
+                  type="text" 
+                  placeholder="Buscar peça..." 
+                  className="w-full bg-zinc-900/50 border border-zinc-800/80 rounded-xl pl-10 pr-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500/50 backdrop-blur-md transition-all"
+                />
               </div>
+              <button 
+                onClick={() => setIsModalOpen(true)} 
+                className="flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-black font-black px-6 py-3 rounded-xl transition-all shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:shadow-[0_0_30px_rgba(245,158,11,0.5)] whitespace-nowrap"
+              >
+                <Plus className="w-5 h-5" />
+                <span className="hidden sm:inline">NOVO PRODUTO</span>
+              </button>
+            </div>
+          </header>
+
+          {/* ESTATÍSTICAS (GLASSMORPHISM) */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div className="bg-zinc-900/40 backdrop-blur-md border border-zinc-800/60 p-6 rounded-3xl hover:border-zinc-700 transition-all">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-amber-500/10 text-amber-500 rounded-2xl flex items-center justify-center border border-amber-500/20">
+                  <Package className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="text-zinc-500 text-xs font-bold uppercase tracking-wider">Total de Peças</p>
+                  <p className="text-3xl font-black mt-1">{products.length}</p>
+                </div>
+              </div>
+            </div>
+            {/* Espaços para mais estatísticas futuras */}
+            <div className="bg-zinc-900/40 backdrop-blur-md border border-zinc-800/60 p-6 rounded-3xl opacity-50">
+              <p className="text-zinc-500 text-xs font-bold uppercase tracking-wider mb-2">Valor em Estoque</p>
+              <p className="text-lg font-medium text-zinc-400">Em breve...</p>
+            </div>
+            <div className="bg-zinc-900/40 backdrop-blur-md border border-zinc-800/60 p-6 rounded-3xl opacity-50">
+              <p className="text-zinc-500 text-xs font-bold uppercase tracking-wider mb-2">Mais Vendido</p>
+              <p className="text-lg font-medium text-zinc-400">Em breve...</p>
             </div>
           </div>
 
-          {/* Painel Direito: Lista de Produtos */}
-          <div className="md:col-span-2 glass p-6 rounded-3xl border border-zinc-800/50 min-h-[500px]">
-            <h2 className="text-xl font-bold mb-6">Suas Peças Atuais</h2>
+          {/* LISTA DE PRODUTOS */}
+          <div className="bg-zinc-900/40 backdrop-blur-xl border border-zinc-800/60 rounded-3xl overflow-hidden shadow-2xl">
+            <div className="p-6 border-b border-zinc-800/60 flex justify-between items-center bg-zinc-900/20">
+              <h3 className="font-bold text-lg">Catálogo Recente</h3>
+            </div>
             
-            {products.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-64 text-zinc-500 border-2 border-dashed border-zinc-800/50 rounded-2xl">
-                <ImageIcon className="w-12 h-12 mb-2 opacity-50" />
-                <p>Nenhum produto cadastrado ainda.</p>
-                <p className="text-sm">Clique em Novo Produto para começar.</p>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {products.map(product => (
-                  <div key={product.id} className="flex items-center justify-between p-4 bg-zinc-900/50 rounded-2xl border border-zinc-800 hover:border-zinc-700 transition-colors">
-                    <div className="flex items-center gap-4">
-                      <div className="w-16 h-16 bg-zinc-800 rounded-xl overflow-hidden flex-shrink-0">
-                        {product.image ? (
-                          <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-zinc-600"><ImageIcon className="w-6 h-6" /></div>
-                        )}
-                      </div>
-                      <div>
-                        <h4 className="font-bold">{product.name}</h4>
-                        <p className="text-red-500 font-bold text-sm">R$ {product.price}</p>
-                        <span className="text-xs text-zinc-500 px-2 py-1 bg-zinc-800 rounded-md mt-1 inline-block">{product.category}</span>
-                      </div>
-                    </div>
-                    <div className="flex gap-2">
-                      <button className="p-2 text-zinc-400 hover:text-amber-500 bg-zinc-950 rounded-lg transition-colors"><Edit2 className="w-4 h-4" /></button>
-                      <button onClick={() => handleDeleteProduct(product.id)} className="p-2 text-zinc-400 hover:text-red-500 bg-zinc-950 rounded-lg transition-colors"><Trash2 className="w-4 h-4" /></button>
-                    </div>
+            <div className="p-6">
+              {products.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-16 text-zinc-500 border-2 border-dashed border-zinc-800/40 rounded-2xl bg-zinc-950/20">
+                  <div className="w-16 h-16 bg-zinc-900 rounded-full flex items-center justify-center mb-4 shadow-inner">
+                    <ImageIcon className="w-8 h-8 opacity-40" />
                   </div>
-                ))}
-              </div>
-            )}
+                  <p className="font-semibold text-zinc-400">Sua vitrine está vazia.</p>
+                  <p className="text-sm mt-1 text-zinc-600">Clique em "Novo Produto" para adicionar a primeira peça.</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {products.map(product => (
+                    <div key={product.id} className="group relative bg-zinc-950/50 border border-zinc-800/80 rounded-2xl overflow-hidden hover:border-amber-500/50 hover:shadow-[0_0_20px_rgba(245,158,11,0.1)] transition-all duration-300">
+                      {/* Botões de Ação (Aparecem no hover) */}
+                      <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                        <button className="w-8 h-8 rounded-full bg-black/60 backdrop-blur-md flex items-center justify-center text-zinc-300 hover:text-amber-500 hover:bg-black transition-all border border-zinc-700/50">
+                          <Edit2 className="w-3.5 h-3.5" />
+                        </button>
+                        <button onClick={() => handleDeleteProduct(product.id)} className="w-8 h-8 rounded-full bg-black/60 backdrop-blur-md flex items-center justify-center text-zinc-300 hover:text-red-500 hover:bg-black transition-all border border-zinc-700/50">
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+
+                      <div className="aspect-[4/3] bg-zinc-900 relative overflow-hidden">
+                        {product.image ? (
+                          <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-zinc-700">
+                            <ImageIcon className="w-8 h-8" />
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/90 via-transparent to-transparent" />
+                      </div>
+                      
+                      <div className="p-5 relative">
+                        <div className="flex justify-between items-start mb-2">
+                          <h4 className="font-bold text-zinc-100 group-hover:text-amber-500 transition-colors line-clamp-1">{product.name}</h4>
+                          <p className="text-amber-500 font-black text-sm whitespace-nowrap ml-2">R$ {product.price}</p>
+                        </div>
+                        <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider px-2 py-1 bg-zinc-900 border border-zinc-800 rounded-md inline-block">
+                          {product.category}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
